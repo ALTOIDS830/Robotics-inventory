@@ -39,8 +39,9 @@ def updating_an_item():
     if nameorquan == 1:
         componentid = int(input("ComponentID: "))
         used = int(input("How many were used: "))
+
         accept = input(f"ComponentID: {componentiD} Used: {used}").strip().upper()
-    
+   
         while accept != "Y":
             componentid = int(input("ComponentID: "))
             used = int(input("How many were used: "))
@@ -52,7 +53,7 @@ def updating_an_item():
         WHERE ComponentID = ?
         AND Quantity >= ?
         """, (used, componentid, used,))
-    
+   
     elif nameorquan == 2:
         name = input("New name: ")
         compid = int(input("ComponentID: "))
@@ -61,8 +62,13 @@ def updating_an_item():
         SET Name = ?
         WHERE ComponentID = ?
         """, (name, compid,))
-    
-    
+
+        cursor.execute("""
+        SELECT * FROM Components
+        WHERE Name LIKE ?
+        """, (name,))
+        print(cursor.fetchall())
+   
     connection.commit()
 #--------------------------------------retrieving items from a database----------------------------------------
 def retrieving():
@@ -81,28 +87,23 @@ def display():
 
 #-----------------------------------------Menu------------------------------------
 def menu():
-    number = int(input("1 For adding a number, 2 for updating a component, 3 retrieving an item, 4 for displaying the full table"))
+    number = int(input("1 For adding a component, 2 for updating a component, 3 retrieving an item, 4 for displaying the full table"))
     while number not in (1, 2, 3, 4):
         number = int(input("Enter a valid number 1 though 4: "))
 
     if number == 1:
         number1 = int(input("How many new components do you want to add"))
-        i = 0
-        while i < number1:
+        for i in range(number1):
             adding_a_component()
-            i =+ 1
+                                 
     elif number == 2:
         number2 = int(input("How many components do you to update: "))
-        j = 0
-        while j < number2:
+        for i in range(number2):
             updating_an_item()
-            j =+ 1
     elif number == 3:
         number3 = int(input("How many items would you like to retrieve: "))
-        k = 0
-        while k < number3:
+        for i in range(number3):
             retrieving()
-            k =+ 1
     elif number == 4:
         display()
 
@@ -110,5 +111,6 @@ menu()
 
 connection.commit()
 connection.close()
+
 
 
